@@ -9,6 +9,16 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         initGUI();
+        final JPanel gui = new JPanel(new BorderLayout(5,5));
+
+        JPanel categories = new JPanel(
+                new FlowLayout(FlowLayout.CENTER, 3,3));
+
+        categories.add( new JLabel("Categories: "), FlowLayout.LEFT);
+        categories.add( new JButton("Foo"), FlowLayout.CENTER);
+        gui.add(categories, BorderLayout.NORTH);
+
+
     }
     public void initGUI() {
         FlatDraculaIJTheme.setup();
