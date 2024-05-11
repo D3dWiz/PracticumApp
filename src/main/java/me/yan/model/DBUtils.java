@@ -9,11 +9,13 @@ public class DBUtils {
     public static Connection getConnection() {
         Connection connection = null;
         try {
-            String jdbcURL = "jdbc:h2:~/IdeaProjects/PracticumApp/Db/test";
+            Class.forName("org.h2.Driver");
+            String jdbcURL = "jdbc:h2:/home/yan_/IdeaProjects/PracticumApp/Db/library";
             String jdbcUsername = "sa";
             String jdbcPassword = "";
+
             connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return connection;
