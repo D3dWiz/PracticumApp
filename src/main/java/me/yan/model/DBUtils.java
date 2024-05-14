@@ -1,8 +1,6 @@
 package me.yan.model;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DBUtils {
 
@@ -15,10 +13,23 @@ public class DBUtils {
             String jdbcPassword = "";
 
             connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
+            printSQLException(e);
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return connection;
+    }
+
+    public static ResultSet getResultSet(String resultSetString) {
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement state = conn.prepareStatement(resultSetString);
+            return state.executeQuery();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void printSQLException(SQLException ex) {
