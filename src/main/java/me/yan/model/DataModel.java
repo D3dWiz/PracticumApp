@@ -1,25 +1,25 @@
 package me.yan.model;
 
 import javax.swing.table.AbstractTableModel;
-import java.io.Serial;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static me.yan.model.DBUtils.getResultSet;
+
 public class DataModel extends AbstractTableModel {
-    @Serial
-    private static final long serialVersionUID = 1L;
+    private ArrayList<Object> data = new ArrayList<>();
     private ResultSet result;
     private int rowCount;
     private int columnCount;
-    private final ArrayList<Object> data=new ArrayList<Object>();
 
-    public DataModel(ResultSet rs) throws Exception
-    {
+    public DataModel(ResultSet rs) throws Exception {
         setRS(rs);
     }
 
     public void setRS(ResultSet rs) throws Exception {
+        data = new ArrayList<>();
         result = rs;
         ResultSetMetaData metaData = rs.getMetaData();
         rowCount = 0;
@@ -47,18 +47,34 @@ public class DataModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Object[] row=(Object[]) data.get(rowIndex);
+        Object[] row = (Object[]) data.get(rowIndex);
         return row[columnIndex];
     }
 
-    public String getColumnName(int columnIndex){
-        try{
-            ResultSetMetaData metaData=result.getMetaData();
+    public String getColumnName(int columnIndex) {
+        try {
+            ResultSetMetaData metaData = result.getMetaData();
             return metaData.getColumnLabel(columnIndex + 1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        catch(Exception e){
-            e.printStackTrace();
-            return null;
+    }
+
+    public void updateResultSet(String currentRS) {
+        try {
+            setRS(getResultSet(currentRS));
+            fireTableDataChanged();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateResultSet(ResultSet currentRS) {
+        try {
+            setRS(currentRS);
+            fireTableDataChanged();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
